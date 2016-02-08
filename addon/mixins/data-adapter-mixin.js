@@ -76,7 +76,10 @@ export default Ember.Mixin.create({
 
     hash.beforeSend = (xhr) => {
       this.get('session').authorize(authorizer, (headerName, headerValue) => {
-        xhr.setRequestHeader(headerName, headerValue);
+        let authorization_info = JSON.parse(headerValue);
+        if (authorization_info["token"] != null && authorization_info["email"] != null) {
+          xhr.setRequestHeader("Auth-Token", authorization_info["token"]);
+        }
       });
       if (beforeSend) {
         beforeSend(xhr);
